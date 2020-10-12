@@ -9,6 +9,7 @@
 
 var express = require("express");
 var path = require("path");
+var bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var indexRouter = require("./routes/index");
@@ -21,12 +22,17 @@ var uninstall = require("./routes/uninstall");
 // ========================================================
 
 var app = express();
+
+// view engine setup
+app.set("views", __dirname + "/views/partials");
+app.set("view engine", "hbs");
+
 app.use(logger("dev"));
-app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-app.set("views", __dirname + "/views");
+
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 
@@ -36,6 +42,6 @@ app.use("/load", load);
 app.use("/uninstall", uninstall);
 // ========================================================
 
-var listener = app.listen(8080, function() {
+var listener = app.listen(8080, function () {
   console.log("Listening on port " + listener.address().port);
 });
